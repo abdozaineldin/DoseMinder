@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-ink: var(--ink);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-tint: var(--primary-tint);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-sand: var(--sand);
+  --color-line: var(--line);
+  --color-saffron: var(--saffron);
+  --color-saffron-tint: var(--saffron-tint);
+  --color-taken: var(--taken);
+  --color-taken-tint: var(--taken-tint);
+  --color-missed: var(--missed);
+  --color-missed-tint: var(--missed-tint);
+  --color-emergency: var(--emergency);
+  --color-emergency-tint: var(--emergency-tint);
+  --color-muted: var(--muted);
+
+  --font-heading: var(--font-readex-pro), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-ibm-plex-sans-arabic), system-ui, -apple-system, sans-serif;
+
+  --radius-patient-card: 24px;
+  --radius-patient-control: 16px;
+  --radius-dashboard: 12px;
+}
+
+:root {
+  /* DoseMinder Light Tokens */
+  --ink: #0E2A2C;
+  --primary: #0F6B70;
+  --primary-dark: #0A4B4F;
+  --primary-tint: #E3F3F1;
+  --paper: #FAF7F2;
+  --card: #FFFFFF;
+  --sand: #F1EBDF;
+  --line: #E5DDD0;
+  --saffron: #F5A524;
+  --saffron-tint: #FFF1D6;
+  --taken: #1E8E55;
+  --taken-tint: #DDF3E6;
+  --missed: #D9453D;
+  --missed-tint: #FDE3E0;
+  --emergency: #A3141B;
+  --emergency-tint: #FBE9EA;
+  --muted: #5B6F71;
+
+  /* Time-of-day Gradients */
+  --grad-dawn: linear-gradient(180deg, #FFE9D2, #FAF7F2);
+  --grad-day: linear-gradient(180deg, #E3F3F1, #FAF7F2);
+  --grad-evening: linear-gradient(180deg, #FFD9B0, #FBE4E0 55%, #FAF7F2);
+  --grad-night: linear-gradient(180deg, #0F3B3F, #12292C);
+
+  /* Shadows */
+  --shadow-warm-sm: 0 1px 2px rgba(14, 42, 44, 0.06);
+  --shadow-warm-card: 0 1px 2px rgba(14, 42, 44, 0.06), 0 8px 24px rgba(14, 42, 44, 0.08);
+
+  /* Font Scaling */
+  --font-scale-multiplier: 1;
+  --base-font-size: 18px;
+}
+
+/* Dark Theme */
+.dark,
+[data-theme="dark"] {
+  --ink: #EAF3F2;
+  --primary: #4FC3C0;
+  --primary-dark: #2E9E9B;
+  --primary-tint: #12383B;
+  --paper: #0A1A1C;
+  --card: #12292C;
+  --sand: #173337;
+  --line: #1F3B3F;
+  --saffron: #F5B84A;
+  --saffron-tint: #3A2E12;
+  --taken: #3DBB7A;
+  --taken-tint: #12362A;
+  --missed: #F0716A;
+  --missed-tint: #3B1A19;
+  --emergency: #E04B52;
+  --emergency-tint: #3A1517;
+  --muted: #9DB4B5;
+
+  --grad-dawn: linear-gradient(180deg, #2A2A24, #0A1A1C);
+  --grad-day: linear-gradient(180deg, #12383B, #0A1A1C);
+  --grad-evening: linear-gradient(180deg, #3A2A22, #0A1A1C);
+  --grad-night: linear-gradient(180deg, #0F3B3F, #0A1A1C);
+
+  --shadow-warm-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-warm-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* High Contrast Mode */
+[data-high-contrast="true"] {
+  --ink: #000000;
+  --paper: #FFFFFF;
+  --card: #FFFFFF;
+  --line: #000000;
+  --muted: #1A1A1A;
+  --sand: #F0F0F0;
+}
+
+.dark[data-high-contrast="true"],
+[data-theme="dark"][data-high-contrast="true"] {
+  --ink: #FFFFFF;
+  --paper: #000000;
+  --card: #050505;
+  --line: #FFFFFF;
+  --muted: #E0E0E0;
+  --sand: #121212;
+}
+
+/* Font Scale Roots */
+html[data-font-scale="1"] {
+  --font-scale-multiplier: 1;
+}
+
+html[data-font-scale="2"] {
+  --font-scale-multiplier: 1.2;
+}
+
+html[data-font-scale="3"] {
+  --font-scale-multiplier: 1.4;
+}
+
+html {
+  font-size: calc(var(--base-font-size) * var(--font-scale-multiplier));
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  overflow-x: clip;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  transition: background-color 200ms ease, color 200ms ease;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Latin Numerals and Times Rule (SPEC §3.9 & §9.2) */
+.tabular-latin,
+[dir="rtl"] .tabular-latin,
+.font-numeric {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-family: var(--font-heading);
+  direction: ltr;
+  display: inline-block;
+}
+
+/* Accessible Focus Ring: 3px primary with 2px offset */
+*:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
