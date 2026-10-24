@@ -177,3 +177,263 @@ h1, h2, h3, h4, h5, h6 {
     scroll-behavior: auto !important;
   }
 }
+
+/* ========================================================================== */
+/* Splash screen: pill bottle fills, cap seals, site opens                    */
+/* ========================================================================== */
+@property --splash-r {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -6%;
+}
+
+.dm-splash {
+  --splash-r: -6%;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  overflow: hidden;
+}
+.dm-splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(52% 42% at 50% 40%, var(--primary-tint) 0%, transparent 72%),
+    radial-gradient(40% 30% at 85% 100%, var(--saffron-tint) 0%, transparent 70%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Hidden when already seen this session / reduced motion / no JS */
+html[data-splash="skip"] .dm-splash,
+html[data-splash="done"] .dm-splash {
+  display: none;
+}
+html[data-splash="on"],
+html[data-splash="on"] body {
+  overflow: hidden;
+}
+
+.dm-splash-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 24px;
+}
+.dm-bottle-wrap {
+  height: min(56svh, 420px);
+  aspect-ratio: 340 / 450;
+  animation: dm-bottle-in 600ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+.dm-bottle-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ---- status / progress ---- */
+.dm-splash-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: -6px;
+}
+.dm-splash-status {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  min-height: 1.75rem;
+  text-align: center;
+}
+.dm-splash-bar {
+  width: 11rem;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.dm-splash-bar-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), var(--saffron));
+  transform-origin: left center;
+  transition: transform 120ms linear;
+}
+[dir="rtl"] .dm-splash-bar-fill {
+  transform-origin: right center;
+  background: linear-gradient(270deg, var(--primary), var(--saffron));
+}
+.dm-splash-percent {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.dm-splash-skip {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  z-index: 2;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+  color: var(--muted);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0;
+  animation: dm-fade-up 400ms ease 900ms forwards;
+  transition: color 150ms, border-color 150ms;
+}
+.dm-splash-skip:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.dm-fade-up {
+  animation: dm-fade-up 380ms ease both;
+}
+
+/* ---- pills: drop through the neck, tumble, land with a small bounce ---- */
+.dm-pill {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.dm-pill.is-in {
+  animation: dm-pill-drop 680ms both;
+}
+
+/* ---- cap ---- */
+.dm-cap {
+  transform: translate(206px, -34px) rotate(24deg);
+  transition: transform 640ms cubic-bezier(0.55, -0.15, 0.3, 1.25);
+}
+.dm-cap[data-sealed="true"] {
+  transform: translate(120px, 62px) rotate(0deg);
+}
+.dm-cap-float {
+  animation: dm-cap-float 2.4s ease-in-out infinite;
+}
+.dm-cap[data-sealed="true"] .dm-cap-float {
+  animation: none;
+}
+
+/* ---- stage squash when the cap clicks on ---- */
+.dm-stage {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.dm-stage[data-sealed="true"] {
+  animation: dm-squash 520ms cubic-bezier(0.3, 0.7, 0.4, 1) 420ms both;
+}
+
+/* ---- label heartbeat ---- */
+.dm-beat {
+  stroke-dasharray: 60;
+  animation: dm-beat 1.8s ease-in-out infinite;
+}
+
+/* ---- success badge + ring ---- */
+.dm-check {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+}
+.dm-check[data-on="true"] {
+  animation: dm-pop 520ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.dm-ring {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.dm-splash[data-phase="sealing"] .dm-ring,
+.dm-splash[data-phase="ready"] .dm-ring {
+  animation: dm-ring 900ms ease-out 420ms both;
+}
+
+/* ---- exit: circular reveal from the bottle ---- */
+.dm-splash[data-phase="exiting"] {
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle farthest-corner at 50% 44%, transparent var(--splash-r), #000 calc(var(--splash-r) + 5%));
+  mask-image: radial-gradient(circle farthest-corner at 50% 44%, transparent var(--splash-r), #000 calc(var(--splash-r) + 5%));
+  animation: dm-reveal 820ms cubic-bezier(0.6, 0, 0.25, 1) forwards;
+}
+.dm-splash[data-phase="exiting"] .dm-splash-content {
+  animation: dm-content-out 420ms ease-in forwards;
+}
+
+/* ---- keyframes ---- */
+@keyframes dm-bottle-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.92); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes dm-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes dm-pill-drop {
+  0% {
+    opacity: 0;
+    transform: translate(var(--sx), var(--sy)) rotate(var(--r0));
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+  }
+  10% { opacity: 1; }
+  40% {
+    opacity: 1;
+    transform: translate(var(--mx), var(--my)) rotate(var(--r1));
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.9, 0.55);
+  }
+  76% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  88% { opacity: 1; transform: translate(0, -4px) rotate(0deg); animation-timing-function: ease-in; }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes dm-cap-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes dm-squash {
+  0% { transform: scale(1, 1); }
+  35% { transform: scale(1.025, 0.96); }
+  70% { transform: scale(0.99, 1.015); }
+  100% { transform: scale(1, 1); }
+}
+@keyframes dm-beat {
+  0% { stroke-dashoffset: 60; opacity: 0.3; }
+  45% { stroke-dashoffset: 0; opacity: 1; }
+  80% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -60; opacity: 0.3; }
+}
+@keyframes dm-pop {
+  0% { transform: scale(0) rotate(-30deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes dm-ring {
+  0% { opacity: 0.55; transform: scale(0.7); }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+@keyframes dm-reveal {
+  from { --splash-r: -6%; opacity: 1; }
+  70%  { opacity: 1; }
+  to   { --splash-r: 100%; opacity: 0; }
+}
+@keyframes dm-content-out {
+  to { opacity: 0; transform: scale(1.12); }
+}

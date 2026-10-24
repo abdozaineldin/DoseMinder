@@ -380,5 +380,11 @@
     "cream": "كريم",
     "inhaler": "بخاخ",
     "other": "أخرى"
+  },
+  "splash": {
+    "loading": "بنجهّز دواك…",
+    "ready": "تمام، كله جاهز",
+    "skip": "تخطي",
+    "aria": "جاري تحميل DoseMinder"
   }
 }

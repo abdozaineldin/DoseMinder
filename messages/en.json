@@ -380,5 +380,11 @@
     "cream": "Cream",
     "inhaler": "Inhaler",
     "other": "Other"
+  },
+  "splash": {
+    "loading": "Preparing your medication…",
+    "ready": "All set. Welcome!",
+    "skip": "Skip",
+    "aria": "Loading DoseMinder"
   }
 }

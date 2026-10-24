@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { ThemeSync } from '@/components/shared/ThemeSync';
+import { SplashScreen } from '@/components/shared/SplashScreen';
 import { routing } from '@/i18n/routing';
 import { readexPro, ibmPlexSansArabic } from '@/app/fonts';
 import { ToastProvider } from '@/components/ui/toast';
@@ -66,6 +67,20 @@ const themeInitScript = `
   })();
 `;
 
+/* Decides before first paint whether the splash screen should play:
+ * once per browser tab session, and never for reduced-motion users. */
+const splashInitScript = `
+  (function() {
+    var root = document.documentElement;
+    try {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      root.setAttribute('data-splash', reduce ? 'skip' : 'on');
+    } catch (e) {
+      root.setAttribute('data-splash', 'skip');
+    }
+  })();
+`;
+
 export default async function LocaleLayout({
   children,
   params,
@@ -92,10 +107,15 @@ export default async function LocaleLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: splashInitScript }} />
+        <noscript>
+          <style>{`.dm-splash{display:none!important}`}</style>
+        </noscript>
       </head>
       <body className="font-body bg-paper text-ink min-h-screen antialiased selection:bg-primary-tint selection:text-primary-dark">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeSync />
+          <SplashScreen />
           <ToastProvider>{children}</ToastProvider>
         </NextIntlClientProvider>
       </body>
