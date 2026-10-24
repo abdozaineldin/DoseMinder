@@ -5,6 +5,7 @@ import { StatusChip } from '@/components/shared/StatusChip';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ConfirmDoseButton } from '@/components/patient/ConfirmDoseButton';
 import { NotConnected } from '@/components/patient/NotConnected';
+import { ReminderWatcher } from '@/components/patient/ReminderWatcher';
 import { getPatientContext, getTodayDoses } from '@/lib/patient/data';
 import { chipFor, isDue, ringFor, type DoseRow } from '@/lib/patient/status';
 import { formatLongDate, formatTimeAt, hourIn, type AppLocale } from '@/lib/format';
@@ -60,6 +61,7 @@ export default async function PatientTodayPage({ params }: { params: Promise<{ l
 
   return (
     <div className="space-y-5">
+      {next && <ReminderWatcher doseId={next.id} scheduledAt={next.scheduled_at} />}
       {/* Time-of-day header (SPEC §9.3) */}
       <div
         className="rounded-3xl p-5 sm:p-6 border border-line shadow-xs flex items-center justify-between gap-4"

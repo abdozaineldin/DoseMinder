@@ -3,7 +3,8 @@ import { SignOutButton } from '@/components/shared/SignOutButton';
 import { NotConnected } from '@/components/patient/NotConnected';
 import { getPatientContext } from '@/lib/patient/data';
 import { Link } from '@/i18n/routing';
-import { Accessibility, IdCard } from 'lucide-react';
+import { ShareCodeCard } from '@/components/patient/ShareCodeCard';
+import { Accessibility, IdCard, Phone, UserPen } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -22,7 +23,7 @@ export default async function PatientMePage({ params }: { params: Promise<{ loca
   if (!ctx) return <NotConnected locale={locale} />;
 
   const dash = '—';
-  const hasMedicalId = ctx.bloodType || ctx.allergies.length > 0 || ctx.chronicConditions.length > 0;
+  const list = new Intl.ListFormat(locale, { style: 'narrow', type: 'unit' });
 
   return (
     <div className="space-y-5">
@@ -39,17 +40,10 @@ export default async function PatientMePage({ params }: { params: Promise<{ loca
           </div>
         </div>
 
-        <div className="rounded-2xl bg-sand/50 border border-line p-4">
-          <p className="text-xs font-semibold text-muted">{t('shareCode')}</p>
-          <p dir="ltr" className="text-start font-mono font-bold text-2xl text-primary tracking-wider mt-1">
-            {ctx.shareCode}
-          </p>
-          <p className="text-xs text-muted mt-2">{t('shareCodeHint')}</p>
-        </div>
+        <ShareCodeCard code={ctx.shareCode} />
       </section>
 
-      {hasMedicalId && (
-        <section className="rounded-3xl border border-line bg-card p-5 space-y-3">
+      <section className="rounded-3xl border border-line bg-card p-5 space-y-3">
           <h2 className="flex items-center gap-2 font-heading font-bold text-lg text-ink">
             <IdCard className="w-5 h-5 text-primary" />
             {t('medicalId')}
@@ -61,15 +55,24 @@ export default async function PatientMePage({ params }: { params: Promise<{ loca
             </div>
             <div className="flex justify-between gap-3">
               <dt className="text-muted">{t('allergies')}</dt>
-              <dd className="font-medium text-ink text-end">{ctx.allergies.join('، ') || dash}</dd>
+              <dd className="font-medium text-ink text-end">{list.format(ctx.allergies) || dash}</dd>
             </div>
             <div className="flex justify-between gap-3">
               <dt className="text-muted">{t('conditions')}</dt>
-              <dd className="font-medium text-ink text-end">{ctx.chronicConditions.join('، ') || dash}</dd>
+              <dd className="font-medium text-ink text-end">{list.format(ctx.chronicConditions) || dash}</dd>
             </div>
           </dl>
         </section>
-      )}
+
+      <Link href="/patient/me/edit" className="flex items-center gap-3 rounded-3xl border border-line bg-card p-5 font-medium text-ink hover:border-primary transition-colors">
+        <UserPen className="w-5 h-5 text-primary" />
+        <span>{t('editProfileTitle')}</span>
+      </Link>
+
+      <Link href="/patient/me/emergency" className="flex items-center gap-3 rounded-3xl border border-line bg-card p-5 font-medium text-ink hover:border-primary transition-colors">
+        <Phone className="w-5 h-5 text-primary" />
+        <span>{t('emergencyTitle')}</span>
+      </Link>
 
       <Link
         href="/accessibility"

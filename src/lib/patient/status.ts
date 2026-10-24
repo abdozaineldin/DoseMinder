@@ -12,6 +12,9 @@ export interface DoseRow {
 }
 
 /** Early window: a dose can be confirmed up to 30 min before its time (SPEC §3.3). */
+/** Allowed confirmation window after the scheduled time (app_settings.allowed_minutes default). */
+export const ALLOWED_MINUTES = 30;
+
 const EARLY_MS = 30 * 60 * 1000;
 
 export function isDue(d: DoseRow, now: number): boolean {

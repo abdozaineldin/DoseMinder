@@ -798,15 +798,15 @@ export type Database = {
           p_color: string
           p_days: number[]
           p_dose_amount: string
-          p_end: string
+          p_end: string | null
           p_form: Database["public"]["Enums"]["med_form"]
-          p_generic: string
+          p_generic: string | null
           p_id: string
-          p_instructions: string
+          p_instructions: string | null
           p_meal: Database["public"]["Enums"]["meal_rule"]
           p_name: string
           p_start: string
-          p_strength: string
+          p_strength: string | null
           p_times: string[]
           p_updated_at?: string
         }
