@@ -8,10 +8,33 @@ import { readexPro, ibmPlexSansArabic } from '@/app/fonts';
 import { ToastProvider } from '@/components/ui/toast';
 import '@/app/globals.css';
 
-export const metadata: Metadata = {
-  title: 'DoseMinder — تذكير ومتابعة الأدوية',
+export const metadata = {
+  title: "DoseMinder – تذكير ومتابعة الأدوية",
   description:
-    'تطبيق ذكي لإدارة ومتابعة الأدوية لكبار السن وأسرهم مع عرض الجدول حتى بدون إنترنت.',
+    "منصة لإدارة مواعيد الأدوية ومتابعة الجرعات، تساعد كبار السن وأسرهم ومقدمي الرعاية على الالتزام بالعلاج.",
+  openGraph: {
+    title: "DoseMinder – تذكير ومتابعة الأدوية",
+    description:
+      "تذكير ذكي بالأدوية ومتابعة الجرعات لراحة المرضى وأسرهم.",
+    url: "https://doseminder.vercel.app/",
+    siteName: "DoseMinder",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "DoseMinder - Medication reminders",
+      },
+    ],
+    locale: "ar_EG",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DoseMinder – تذكير ومتابعة الأدوية",
+    description: "تذكير ذكي بالأدوية ومتابعة الجرعات.",
+    images: ["/og-image.png"],
+  },
 };
 
 export function generateStaticParams() {
